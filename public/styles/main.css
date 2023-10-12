@@ -1,0 +1,26 @@
+#d20 {
+    width: 100px;
+}
+
+.card {
+    float: right;
+    margin: 4em auto auto auto;
+}
+
+#selections {
+    display: inline-block;
+    margin: 1.5em 0 1.5em 1.5em;
+}
+
+#bodyContainer {
+    display: flex; 
+}
+
+label {
+    width: 175px;
+}
+
+.form-select {
+    display: inline-block;
+    width: 400px;
+}
