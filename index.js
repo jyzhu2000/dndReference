@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 
 const app = express(); 
 const port = 3000; 
+
+// DND public API docs: https://www.dnd5eapi.co/docs/
 const API_URL = "https://www.dnd5eapi.co/api";
 
 app.use(express.static("public"));
@@ -12,12 +14,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 let content = "Select the desired DND term to view reference information.";
 
+// Base route
 app.get("/", async (req, res) => {
     try {
         const endpoints = await axios.get(API_URL);
         let endpointsList = Object.keys(endpoints.data);
         let promises = [];
         
+        // Add all axios calls to the promises array and run them synchronously. 
+        // This retrieves all available endpoints (categories of DND terms) and all the DND terms for each endpoint (category).
         endpointsList.forEach((endpoint, i) => {
             promises.push(
                 axios.get(API_URL + "/" + endpoint).then(response => {
@@ -37,6 +42,7 @@ app.get("/", async (req, res) => {
     }
 })
 
+// Practice parsing and displaying for 1 endpoint.
 app.post("/ability-scores", async (req, res) => {
     try {
         const result = await axios.get(API_URL + "/ability-scores/" + req.body["ability-scores"]);
@@ -48,6 +54,7 @@ app.post("/ability-scores", async (req, res) => {
     }
 })
 
+// Return the response JSON for all other endpoints.
 app.post("/*", async (req, res) => {
     const path = req.originalUrl;
     try {

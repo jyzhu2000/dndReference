@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
+    <!-- Title Hero -->
     <div class="bg-dark text-secondary px-4 py-5 text-center">
         <div class="py-5">
           <h1 class="display-5 fw-bold text-white">DND Reference Site <img src="images/d20.png" alt="d20 die" id="d20"></h1>
@@ -18,43 +19,50 @@
       </div>
     <div id="bodyContainer">
 
-        <div id="selections">
-            <% endpointsList.forEach(endpoint => { %>
-                <% let name = endpoint.name %>
-                <form action="/<%= name %>" class="form" method="POST">
-                    <label for="<%= name %>"><%= name %>: </label>
-                    <select class="form-select form-select-sm" name="<%= name %>" id="<%= name %>">
-                        <option value="">Select</option>
-                        <% endpoint.resources.forEach(resource => { %>
-                            <option value="<%= resource.index %>"><%= resource.name %></option>
+
+    <!-- DND term selection forms -->
+    <div id="selections">
+        <% endpointsList.forEach(endpoint => { %>
+            <% let name = endpoint.name %>
+
+            <!-- Create a new form for each DND term category -->
+            <form action="/<%= name %>" class="form" method="POST">
+                <label for="<%= name %>"><%= name %>: </label>
+                <select class="form-select form-select-sm" name="<%= name %>" id="<%= name %>">
+                    <option value="">Select</option>
+                    <!-- Add all DND terms for this category as selection options -->
+                    <% endpoint.resources.forEach(resource => { %>
+                        <option value="<%= resource.index %>"><%= resource.name %></option>
+                    <% }) %>
+                </select>
+                <button type="submit" class="form-submit btn btn-secondary btn-sm">Go</button>
+                <br>
+            </form>
+        <% }) %>
+    </div>
+
+    <!-- Display information retrieved from DND public API -->
+    <div class="card shadow" style="width: 40%;">
+        <div class="card-body">
+            <% if (typeof(locals.content) === 'string') { %>
+                <pre><%= content %></pre>
+            <% } else { %>
+                <!-- Styling practice, only for /ability-scores -->
+                <div id="resourceContent">
+                    <h1><%= content.full_name %></h1>
+                    <% content.desc.forEach(desc => { %>
+                        <p><%= desc %></p>
+                    <% }) %>
+                    <h3>Skills: </h3>
+                    <ul>
+                        <% content.skills.forEach(skill => { %>
+                            <li><%= skill.name %></li>
                         <% }) %>
-                    </select>
-                    <button type="submit" class="form-submit btn btn-secondary btn-sm">Go</button>
-                    <br>
-                </form>
-            <% }) %>
+                    </ul>
+                </div>
+            <% } %>
         </div>
-    
-        <div class="card shadow" style="width: 40%;">
-            <div class="card-body">
-                <% if (typeof(locals.content) === 'string') { %>
-                    <pre><%= content %></pre>
-                <% } else { %>
-                    <div id="resourceContent">
-                        <h1><%= content.full_name %></h1>
-                        <% content.desc.forEach(desc => { %>
-                            <p><%= desc %></p>
-                        <% }) %>
-                        <h3>Skills: </h3>
-                        <ul>
-                            <% content.skills.forEach(skill => { %>
-                                <li><%= skill.name %></li>
-                            <% }) %>
-                        </ul>
-                    </div>
-                <% } %>
-            </div>
-        </div>
+    </div>
         
     </div>
 </body>
